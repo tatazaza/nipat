@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
 
 class Constant {
-  static const String APP_NAME = 'More Feature';
+  static const String APP_NAME = 'Check name';
   static const String PROFILE = 'Profile';
   static const String CAMERA = 'Camera';
   static const String REPORT = 'Report';
-  static const String INSERT = 'InsertDataStusent';
-
-  //routes
-  static const String HOME_ROUTE = '/home';
-  static const String PROFILE_ROUTE = '/profile';
-  static const String CAMERA_ROUTE = '/camera';
-  static const String REPORT_ROUTE = '/report';
-  static const String INSERT_ROUTE = '/insert';
+  static const String INSERT = 'InsertDataStudent';
+  static const String LOGIN = 'Login';
 
   //color
   static const Color PRIMARY_COLOR = Color(0xFF212121);
@@ -22,7 +16,4 @@ class Constant {
   static const Color R_COLOR = Color(0xFFa86d6e);
   static const Color G_COLOR = Color(0xFF7a9e69);
   static const Color B_COLOR = Color(0xFF7997c9);
-//  #a86d6e แดง
-//  #7a9e69 green
-//  #7997c9 blue
 }

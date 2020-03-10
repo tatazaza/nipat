@@ -1,171 +1,160 @@
 import 'package:flutter/material.dart';
+import 'package:nipat/src/components/custom_container.dart';
+import 'package:nipat/src/components/widgets.dart';
+import 'package:nipat/src/pages/camera_page/camera.dart';
+import 'package:nipat/src/pages/insert_data_page/insert_info.dart';
+import 'package:nipat/src/pages/profile_page/insert_sec.dart';
+import 'package:nipat/src/pages/profile_page/profile.dart';
+import 'package:nipat/src/scoped_models/user.dart';
+import 'package:nipat/src/services/auth_service.dart';
+import 'package:nipat/src/services/logging_service.dart';
 import 'package:nipat/src/utils/constant.dart';
+import 'package:scoped_model/scoped_model.dart';
 
-import 'package:image_picker/image_picker.dart';
-import 'dart:async';
-
-//import 'dart:io';
 class HomePage extends StatefulWidget {
+  HomePage({
+    this.userId,
+    this.userEmail,
+    this.auth,
+    this.logoutCallback,
+  });
+
+  final String userId;
+  final String userEmail;
+  final BaseAuth auth;
+  final VoidCallback logoutCallback;
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  Future getImageFromCam() async {
-    // for camera
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
-    setState(() {
-//      _image = image;
-    });
+  void signOut() async {
+    try {
+      await widget.auth.signOut();
+      widget.logoutCallback();
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
+
+  Widget dataColumn(UserType role, BuildContext context) {
+    switch (role) {
+      case UserType.STUDENT:
+        return studentViewColumn(context);
+      case UserType.TEACHER:
+        return teacherViewColumn(context);
+      case UserType.ADMIN:
+        return Column(
+          children: <Widget>[
+            studentViewColumn(context),
+            teacherViewColumn(context),
+          ],
+        );
+      default:
+        return Container();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFF3c4250),
-      body: ListView(
-        children: <Widget>[
-          Column(
+    return ScopedModelDescendant<User>(
+      builder: (BuildContext context, Widget child, User user) {
+        return Scaffold(
+          backgroundColor: Color(0xFF3c4250),
+          body: ListView(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 60, bottom: 30),
-                child: Text(
-                  Constant.APP_NAME,
-                  style: TextStyle(fontSize: 30, color: Colors.white),
-                ),
-              ),
-              Container(
-                height: 120,
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 20, left: 20),
-                  child: RaisedButton(
-                    color: Constant.R_COLOR,
-                    onPressed: () {
-                      Navigator.pushNamed(context, Constant.PROFILE_ROUTE);
-                    },
-                    child: Row(
-                      children: <Widget>[
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Icon(
-                          Icons.folder_open,
-                          size: 70,
-                          color: Colors.white,
-                        ),
-                        SizedBox(width: 30),
-                        Text(
-                          "Add more SKUs",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
+              Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 60,
+                      bottom: 30,
+                    ),
+                    child: Text(
+                      'Welcome ${widget.userEmail}',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
+                  dataColumn(user.role, context),
+                ],
               ),
-              SizedBox(height: 18),
-              Container(
-                height: 120,
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 20, left: 20),
-                  child: RaisedButton(
-                    color: Constant.G_COLOR,
-//                  onPressed: () {Navigator.pushNamed(context, Constant.CAMERA_ROUTE);},
-                    onPressed: getImageFromCam,
-                    child: Row(
-                      children: <Widget>[
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Icon(
-                          Icons.computer,
-                          size: 70,
-                          color: Colors.white,
-                        ),
-                        SizedBox(width: 30),
-                        Text(
-                          "Multi branchs Control",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 18),
-              Container(
-                height: 120,
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 20, left: 20),
-                  child: RaisedButton(
-                    color: Constant.B_COLOR,
-                    onPressed: () {
-                      Navigator.pushNamed(context, Constant.REPORT_ROUTE);
-                    },
-                    child: Row(
-                      children: <Widget>[
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Icon(Icons.cloud_queue, size: 70, color: Colors.white),
-                        SizedBox(width: 30),
-                        Text(
-                          "Cloud based Backup",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 18),
-              Container(
-                height: 120,
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 20, left: 20),
-                  child: RaisedButton(
-                    color: Constant.R_COLOR,
-                    onPressed: () {
-                      Navigator.pushNamed(context, Constant.INSERT_ROUTE);
-                    },
-                    child: Row(
-                      children: <Widget>[
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Icon(Icons.people_outline,
-                            size: 70, color: Colors.white),
-                        SizedBox(width: 30),
-                        Text(
-                          "Data Student",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 18),
             ],
           ),
-        ],
-      ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => signOut(),
+            child: Icon(Icons.exit_to_app),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget studentViewColumn(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        // add info
+        buildSizedBox(13.0),
+        CustomContainer(
+          text: 'เพิ่มข้อมูลนิสิต',
+          color: Constant.PRIMARY_COLOR,
+          icon: Icons.verified_user,
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => InsertDataPage(),
+            ),
+          ),
+        ),
+        buildSizedBox(13.0),
+        // edit student info
+        CustomContainer(
+          text: 'ดูข้อมูลนิสิต',
+          color: Constant.ORANGE_COLOR,
+          icon: Icons.portrait,
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProfilePage(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget teacherViewColumn(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        buildSizedBox(13.0),
+        CustomContainer(
+          text: 'เพิ่มหมู่เรียน',
+          color: Constant.R_COLOR,
+          icon: Icons.group_add,
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => InsertSecPage(),
+            ),
+          ),
+        ),
+        buildSizedBox(13.0),
+        CustomContainer(
+          text: 'ดูหมู่เรียน',
+          color: Constant.G_COLOR,
+          icon: Icons.group,
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProfilePage(),
+            ),
+          ),
+        ),
+        buildSizedBox(20.0),
+      ],
     );
   }
 }

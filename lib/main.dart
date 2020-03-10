@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
-import 'src/my_app.dart';
+import 'package:nipat/src/my_app.dart';
 
 void main() => runApp(MyApp());
