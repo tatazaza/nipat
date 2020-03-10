@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nipat/src/components/loading_container.dart';
 import 'package:nipat/src/models/student.dart';
-import 'package:nipat/src/pages/camera_page/camera.dart';
 import 'package:nipat/src/pages/profile_page/insert_sec.dart';
 import 'package:nipat/src/pages/profile_page/insert_sec_student.dart';
 import 'package:nipat/src/scoped_models/user.dart';
@@ -72,7 +71,10 @@ class _ProfilePageState extends State<ProfilePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CameraPage(numbSec: document['number'])),
+                            builder: (context) => InsertSecStudentPage(
+                              numbersec: document['number'],
+                            ),
+                          ),
                         );
                       },
                     );
