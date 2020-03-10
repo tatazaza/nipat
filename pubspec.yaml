@@ -25,6 +25,10 @@ dependencies:
   dio: ^3.0.8
   scoped_model: ^1.0.1
   qrcode_reader: ^0.4.4
+  uuid: ^2.0.4
+  intl: ^0.15.8
+  cached_network_image: ^2.0.0
+  shimmer: ^1.1.0
 
 dev_dependencies:
   flutter_test:
